@@ -13,7 +13,6 @@ router.post("/saveUserData", async (req, res) => {
     for (let i = 0; i < 32; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-    console.log("$$$$$$$$$$$$$$$$$$$", result);
 
     const [userData, created] = await User.findOrCreate({
       where: { address: req.body.address },
