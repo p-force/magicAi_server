@@ -2,11 +2,11 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    username: process.env.DB_USER,
-    password: process.env.DB_USERPASSWORD,
-    database: process.env.DATABASE,
-    host: '127.0.0.1',
-    port: process.env.DB_PORT,
+    username: 'default',
+    password: 'hM9erd7gVAiL',
+    database: 'verceldb',
+    host: 'ep-polished-river-a4gpuqh3-pooler.us-east-1.aws.neon.tech',
+    port: 5432,
     dialect: 'postgres',
   },
   test: {
