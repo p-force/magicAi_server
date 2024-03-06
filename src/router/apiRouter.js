@@ -1,33 +1,42 @@
 const router = require("express").Router();
 const { User } = require("../../db/models");
 const url = require("url");
+const { sql } = require("@vercel/postgres");
 
-module.exports = (pool) => {
+module.exports = () => {
   /**
-   * @param {} pool
-   * @return
-   */
+  {
+    "address": "0xsljndldnjlfngblnfgljb",
+    "generate_img_count": "1",
+    "mint_nft_count": "1",
+    "points_total": "12",
+    "refferal_points": "3",
+    "refferals_arr": ["0xdfdfbd", "0xwerwerwe", "0xwrgrotnbrtww"],
+  }
+ */
   router.post("/saveUserData", async (req, res) => {
     console.log(req.body);
     try {
-      const connectionString =
-        "postgres://default:hM9erd7gVAiL@ep-polished-river-a4gpuqh3-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require";
+      // const connectionString =
+      //   "postgres://default:hM9erd7gVAiL@ep-polished-river-a4gpuqh3-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require";
 
-      // Разбираем строку подключения
-      const parsedUrl = new URL(connectionString);
+      // // Разбираем строку подключения
+      // const parsedUrl = new URL(connectionString);
 
-      // Извлекаем данные из разобранной строки подключения
-      const host = parsedUrl.hostname;
-      const port = parsedUrl.port;
-      const user = parsedUrl.username;
-      const password = parsedUrl.password;
-      const database = parsedUrl.pathname.substr(1); // Имя базы данных начинается после первого слэша
+      // // Извлекаем данные из разобранной строки подключения
+      // const host = parsedUrl.hostname;
+      // const port = parsedUrl.port;
+      // const user = parsedUrl.username;
+      // const password = parsedUrl.password;
+      // const database = parsedUrl.pathname.substr(1); // Имя базы данных начинается после первого слэша
 
-      console.log("Host:", host);
-      console.log("Port:", port);
-      console.log("User:", user);
-      console.log("Password:", password);
-      console.log("Database:", database);
+      // console.log("Host:", host);
+      // console.log("Port:", port);
+      // console.log("User:", user);
+      // console.log("Password:", password);
+      // console.log("Database:", database);
+
+      // console.log("Database:", sql.caller.database);
 
       const characters =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-~._!*";
@@ -41,13 +50,14 @@ module.exports = (pool) => {
         );
       }
 
-      const [userData, created] = await parsedUrl.findOrCreate({
+      console.log("$$$$$$$$$$$$$$$$$$$$");
+      const [userData, created] = await User.findOrCreate({
         where: { address: req.body.address },
         defaults: { ...req.body, ref_link: result },
       });
 
       if (!created) {
-        await parsedUrl.update(
+        await sql.update(
           { ...req.body },
           {
             where: { address: req.body.address },
@@ -65,7 +75,7 @@ module.exports = (pool) => {
     try {
       const { address } = req.body;
 
-      const userData = await parsedUrl.findOne({ where: { address } });
+      const userData = await User.findOne({ where: { address } });
       res.json(userData);
     } catch (e) {
       res.sendStatus(500);
@@ -74,7 +84,7 @@ module.exports = (pool) => {
 
   router.get("/getLiderBoardData", async (req, res) => {
     try {
-      const data = await parsedUrl.findAll({
+      const data = await User.findAll({
         where: {},
         limit: 100,
         order: [
